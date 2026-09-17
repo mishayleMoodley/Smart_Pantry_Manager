@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.smartpantrymanager.model.Ingred;
+import com.example.smartpantrymanager.model.Recipe;
+import com.example.smartpantrymanager.model.RecipeIngred;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -154,5 +156,58 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 c.getDouble(c.getColumnIndexOrThrow(COL_P_QTY)),
                 c.getString(c.getColumnIndexOrThrow(COL_P_UNIT)),
                 c.getString(c.getColumnIndexOrThrow(COL_P_EXPIRY)));
+    }
+
+
+    // these functions will read the recipes from the database
+    public List<Recipe> getALlRecipes() {
+        List<Recipe> recipes = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.query(TABLE_RECIPES, null, null, null, null, null, COL_R_NAME + " ASC");
+        if (c.moveToFirst()) {
+            do {
+                long id = c.getLong(c.getColumnIndexOrThrow(COL_R_ID));
+                String name = c.getString(c.getColumnIndexOrThrow(COL_R_NAME));
+                String steps = c.getString(c.getColumnIndexOrThrow(COL_R_STEPS));
+                Recipe recipe = new Recipe(id, name, steps);
+                recipe.setIngreds(getRecipeIngreds(db, id));
+                recipes.add(recipe);
+            } while (c.moveToNext());
+        }
+        c.close();
+        db.close();
+        return recipes;
+    }
+
+    public Recipe getRecipe(long recipeId) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.query(TABLE_RECIPES, null, COL_R_ID + "=?",
+                new String[]{String.valueOf(recipeId)}, null, null, null);
+        Recipe recipe = null;
+        if (c.moveToFirst()) {
+            String name = c.getString(c.getColumnIndexOrThrow(COL_R_NAME));
+            String steps = c.getString(c.getColumnIndexOrThrow(COL_R_STEPS));
+            recipe = new Recipe(recipeId, name, steps);
+            recipe.setIngreds(getRecipeIngreds(db, recipeId));
+        }
+        c.close();
+        db.close();
+        return recipe;
+    }
+
+    private List<RecipeIngred> getRecipeIngreds(SQLiteDatabase db, long recipeId) {
+        List<RecipeIngred> list = new ArrayList<>();
+        Cursor c = db.query(TABLE_RECIPE_INGREDIENTS, null, COL_RI_RECIPE_ID + "=?",
+                new String[]{String.valueOf(recipeId)}, null, null, null);
+        if (c.moveToFirst()) {
+            do {
+                list.add(new RecipeIngred(
+                        c.getString(c.getColumnIndexOrThrow(COL_RI_NAME)),
+                        c.getDouble(c.getColumnIndexOrThrow(COL_RI_QTY)),
+                        c.getString(c.getColumnIndexOrThrow(COL_RI_UNIT))));
+            } while (c.moveToNext());
+        }
+        c.close();
+        return list;
     }
 }
