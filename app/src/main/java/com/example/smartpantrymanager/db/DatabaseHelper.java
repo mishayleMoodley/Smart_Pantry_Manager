@@ -1,0 +1,78 @@
+package com.example.smartpantrymanager.db;
+
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+public class DatabaseHelper extends SQLiteOpenHelper{
+
+
+    private static final String DATABASE_NAME = "pantry.db";
+    private static final int DATABASE_VERSION = 1;
+
+    // the pantry table the user owns
+    private static final String TABLE_PANTRY = "pantry_items";
+    private static final String COL_P_ID = "_id";
+    private static final String COL_P_NAME = "name";
+    private static final String COL_P_QTY = "quantity";
+    private static final String COL_P_UNIT = "unit";
+    private static final String COL_P_EXPIRY = "expiry_date";
+
+    //the recipe table
+    private static final String TABLE_RECIPES = "recipes";
+    private static final String COL_R_ID = "_id";
+    private static final String COL_R_NAME = "name";
+    private static final String COL_R_STEPS = "steps";
+
+    //recipe ingredients requirements
+    private static final String TABLE_RECIPE_INGREDIENTS = "recipe_ingredients";
+    private static final String COL_RI_ID = "_id";
+    private static final String COL_RI_RECIPE_ID = "recipe_id";
+    private static final String COL_RI_NAME = "name";
+    private static final String COL_RI_QTY = "quantity";
+    private static final String COL_RI_UNIT = "unit";
+
+    private static final String CREATE_TABLE_PANTRY =
+            "CREATE TABLE " + TABLE_PANTRY + " (" +
+                COL_P_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COL_P_NAME + " TEXT NOT NULL, " +
+                COL_P_QTY + " REAL NOT NULL, " +
+                COL_P_UNIT + " TEXT NOT NULL, " +
+                COL_P_EXPIRY + " TEXT)";
+
+    private static final String CREATE_TABLE_RECIPES =
+            "CREATE TABLE " + TABLE_RECIPES + " (" +
+                    COL_R_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,  "+
+                    COL_R_NAME + " TEXT NOT NULL,  "+
+                    COL_R_STEPS + " TEXT NOT NULL);";
+
+    private static final String CREATE_TABLE_RECIPE_INGREDIENTS =
+            "CREATE TABLE " + TABLE_RECIPE_INGREDIENTS + " (" +
+                    COL_RI_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COL_RI_RECIPE_ID + " INTEGER NOT NULL, " +
+                    COL_RI_NAME + " TEXT NOT NULL, " +
+                    COL_RI_QTY + " REAL NOT NULL, " +
+                    COL_RI_UNIT + " TEXT NOT NULL, " +
+                    "FOREIGN KEY(" + COL_RI_RECIPE_ID + ") REFERENCES " +
+                    TABLE_RECIPES + "(" + COL_R_ID + "));";
+
+    public DatabaseHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(CREATE_TABLE_PANTRY);
+        db.execSQL(CREATE_TABLE_RECIPES);
+        db.execSQL(CREATE_TABLE_RECIPE_INGREDIENTS);
+
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PANTRY);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RECIPES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RECIPE_INGREDIENTS);
+        onCreate(db);
+    }
+}
