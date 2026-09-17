@@ -2,9 +2,9 @@ package com.example.smartpantrymanager.model;
 
 public class RecipeIngred {
 
-    private String name;
-    private double quantity;
-    private String unit;
+    private final String name;
+    private final double quantity;
+    private final String unit;
     public RecipeIngred(long id, String name, double quantity, String unit) {
         this.name = name;
         this.quantity = quantity;
@@ -24,7 +24,8 @@ public class RecipeIngred {
     }
 
     public String toDisplayString() {
-        String qtyStr = quantity == Math.floor(quantity) ? String.valueOf((int) quantity) : String.valueOf(quantity);
+        String qtyStr = quantity == Math.floor(quantity) ? String.valueOf((int) quantity) :
+                String.valueOf(quantity);
         String unitPart = (unit == null || unit.trim().isEmpty()) ? "" : unit + " ";
         return qtyStr + " " + unitPart + name;
     }

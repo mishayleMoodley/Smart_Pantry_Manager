@@ -2,7 +2,7 @@ package com.example.smartpantrymanager.model;
 
 public class Ingred {
 
-    private long id;
+    private long id = -1;
     private String name;
     private double quantity;
     private String unit;
@@ -58,6 +58,10 @@ public class Ingred {
 
     public void setExpiryDate(String expiryDate) {
         this.expiryDate = expiryDate;
+    }
+
+    public boolean isNew() {
+        return id == -1;
     }
 }
 
