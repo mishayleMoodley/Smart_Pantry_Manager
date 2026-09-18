@@ -75,7 +75,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         db.execSQL(CREATE_TABLE_PANTRY);
         db.execSQL(CREATE_TABLE_RECIPES);
         db.execSQL(CREATE_TABLE_RECIPE_INGREDIENTS);
-
+        seedRecipes(db);
     }
 
     @Override
@@ -210,4 +210,162 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         c.close();
         return list;
     }
+
+    // adding/seeding recipes
+
+    private void seedRecipes(SQLiteDatabase db) {
+        insertRecipe(db, "Omelette",
+                "1. Beat the eggs in a bowl nad season well with salt. Heat the oil and butter" +
+                        " in a non stick frying pan over medium heat until the butter is melted\n" +
+                        "2. Pour the eggs into the pan and spread it evenly over the pan. Let the" +
+                        " mixture cook for about 20 seconds then scrape a line through the middle" +
+                        " with a spatula.",
+                new Object[][]{
+                        {"egg", 2, "pcs"},
+                        {"salt", 1, "tsp"},
+                        {"butter", 1, "tsp"},
+                        {"bread", 2, "slices"}
+                });
+        insertRecipe(db, "Homemade Peanut Butter",
+                "1. Heat oven to 200C\n" +
+                        "2. Put peanuts into large baking tray, place into oven and roast for 10mins" +
+                        " Remove when golden brown and let to cool\n" +
+                        "3. Add peanuts to food processor and add salt, blend for 4-5mins" +
+                        " add oil to loosen consistency",
+                new Object[][]{
+                        {"peanuts", 400, "g"},
+                        {"salt", 2, "tsp"},
+                        {"oil", 15, "ml"}
+                });
+        insertRecipe(db, "Pancakes",
+                "1. Add flour in a large bowl and make a well in the center. Crack the eggs" +
+                        " in the center, add half of the milk, and whisk/beat until smooth. " +
+                        " add the rest of the milk until the mixture is smooth. \n" +
+                        "2. Heat a non stick frying pan over medium heat and add a drop of oil" +
+                        " covering the whole pan. Add a thin layer of the batter onto the pan" +
+                        " Leave the batter for 30 seconds until it starts to change color around " +
+                        " the edges\n" +
+                        "3. Gently lift up the edges of the pancake using a flat knife, gently " +
+                        " moving to the center of the pancake. In one quick movement flip the " +
+                        " pancake over and leave for around 30 seconds and remove once done",
+                new Object[][]{
+                        {"egg", 2, "pcs"},
+                        {"flour", 100, "g"},
+                        {"milk", 300, "ml"},
+                        {"oil", 1, "tbs"}
+                });
+        insertRecipe(db, "Hash Browns",
+                "1. Cook the potatoes in a pan of boiling water for 10 mins then drain and" +
+                        " set aside to cool. \n" +
+                        "2. Grate the potatoes  into a bowl and removing the skins. Season well" +
+                        " with salt and pour over half the butter. Mix well and divide into 8" +
+                        " and shape it into a patty. \n" +
+                        "3. Heat the oil and the remaining butter in a frying pan until its sizzling" +
+                        " and gently fry the potatoes. Fry for 4-5 mins on each side until its" +
+                        " crispy and golden. ",
+                new Object[][]{
+                        {"potato", 3, "pcs"},
+                        {"butter", 50, "g"},
+                        {"oil", 4, "tbs"},
+                        {"salt", 1, "tsp"}
+                });
+        insertRecipe(db, "Homemade Ice cream",
+                "1. Add condensed milk, cream and vanilla into a large bowl. Beat with an " +
+                        " electric whisk until thick and stiff.\n" +
+                        "2. Scrape it off the bowl and put in the freezer and cover with cling" +
+                        " wrap and freeze until solid. \n",
+                new Object[][]{
+                        {"sweetened condensed milk", 200, "g"},
+                        {"cream", 600, "ml"},
+                        {"vanilla extract", 1, "tsp"}
+                });
+        insertRecipe(db, "Fresh Chips",
+                "1. Cut up the potatoes into chunky sized chips.\n" +
+                        "2. Put the chips in a saucepan. Pour enough oil to cover them by atleast" +
+                        " 2cm. Put the pan on high heart and boil the oil. Stirring the chips" +
+                        " occasionally. \n" +
+                        "3. After 20 mins, the chips should look like they are frying, keep stirring" +
+                        " until its golden brown. Remove the chips from the pan and let them cool",
+                new Object[][]{
+                        {"potato", 5, "pcs"},
+                        {"salt", 5, "tsp"},
+                        {"oil", 300, "ml"}
+                });
+        insertRecipe(db, "Crepes",
+                "1. Add the flour to a large bowl, crack the eggs and add half of the milk" +
+                        " and whisk until smooth and thick. Add remaining milk and whisk more. set" +
+                        " aside for 30 mins. \n" +
+                        "2. Heat a non stick frying pan over medium heat and add a drop of oil to " +
+                        " the pan. When pan is hot, add batter to cover the surface of pan. \n" +
+                        "3. Gently lift up the edges of the crepe using a flat knife, gently " +
+                        " moving to the center of the crepe. In one quick movement flip the " +
+                        " crepe over and leave for around 30 seconds and remove once done \n" +
+                        "4. Whip some cream and add to the crepe. ",
+                new Object[][]{
+                        {"flour", 175, "g"},
+                        {"egg", 3, "pcs"},
+                        {"milk", 450, "ml"},
+                        {"oil", 1, "tbs"},
+                        {"cream", 150, "ml"}
+                });
+        insertRecipe(db, "Shortbread",
+                "1. Heat the oven to 170C, add the flour, butter and egg into a mixing bowl, " +
+                        " combine the ingredients until the mixture feels like crumbly, then " +
+                        " squeeze until it comes together. " +
+                        "2. Add some flour to a counter, and use a rolling pin to roll the dough" +
+                        " to about half a cm thick. Cut the dough into thin rectangles and place " +
+                        " onto a baking tray. Use a fork to create holes. Sprinkle with sugar. \n" +
+                        "3. Chill the dough in the fridge for 20mins, and bake for 15-20mins. " +
+                        " Remove the shortbread rectangles from the oven and leave to cool. \n",
+                new Object[][]{
+                        {"flour", 150, "g"},
+                        {"butter", 100, "g"},
+                        {"caster sugar", 50, "g"}
+                });
+        insertRecipe(db, "Peanut Butter Cookies",
+                "1. Heat oven to 180C, and line 2 large baking trays with baking paper. " +
+                        " Add the peanut butter and sugar into a bowl. Add the salt and mix well" +
+                        " with a spoon. Add the egg and mix again until it turns into a dough. \n" +
+                        "2. Break off small pieces of dough and place it on the baking tray with" +
+                        " a decent spacing between them. Press them down with a fork and spread " +
+                        " them. \n" +
+                        "3. Bake for 12 mins until golden around the edges. Cool on the trays for 10" +
+                        "mins and transfer to a wire rack and cool. ",
+                new Object[][]{
+                        {"peanut butter", 200, "g"},
+                        {"caster sugar", 175, "g"},
+                        {"salt", 1, "tsp"},
+                        {"egg", 1, "pcs"}
+                });
+        insertRecipe(db, "Homemade Tortillas",
+                "1. Mix together the flour and salt. Mix the oil and 150ml of water " +
+                        " into the dry ingredients to form a soft dough. Knead for 1-2 mins\n" +
+                        "2. Split the dough into 25g pieces and roll into thin circular shapes. " +
+                        " Heat a dry pan until very hot and fry each tortilla for 20 secs on " +
+                        " each side. \n" +
+                        "3. Remove any excess flour if needed. ",
+                new Object[][]{
+                        {"self raising flour", 225, "g"},
+                        {"oil", 1, "tbsp"}
+                });
+
+    }
+
+    private void insertRecipe(SQLiteDatabase db, String name, String steps, Object[][] ingreds) {
+        ContentValues recipeValues = new ContentValues();
+        recipeValues.put(COL_R_NAME, name);
+        recipeValues.put(COL_R_STEPS, steps);
+        long recipeId = db.insert(TABLE_RECIPES, null, recipeValues);
+
+        for (Object[] ingred : ingreds) {
+            ContentValues riValues = new ContentValues();
+            riValues.put(COL_RI_RECIPE_ID, recipeId);
+            riValues.put(COL_RI_NAME, (String) ingred[0]);
+            riValues.put(COL_RI_QTY, ((Number) ingred[1]).doubleValue());
+            riValues.put(COL_RI_UNIT, (String) ingred[2]);
+            db.insert(TABLE_RECIPE_INGREDIENTS, null, riValues);
+        }
+    }
+
+
 }

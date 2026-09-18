@@ -5,7 +5,7 @@ public class RecipeIngred {
     private final String name;
     private final double quantity;
     private final String unit;
-    public RecipeIngred(long id, String name, double quantity, String unit) {
+    public RecipeIngred(String name, double quantity, String unit) {
         this.name = name;
         this.quantity = quantity;
         this.unit = unit;
