@@ -1,5 +1,7 @@
 package com.example.smartpantrymanager.db;
 
+import static com.example.smartpantrymanager.util.IngredNormalization.normalizeUnit;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -8,14 +10,17 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.smartpantrymanager.model.Ingred;
 import com.example.smartpantrymanager.model.Recipe;
-import com.example.smartpantrymanager.model.RecipeIngred;
+import com.example.smartpantrymanager.util.IngredNormalization;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.smartpantrymanager.model.RecipeIngred;
+import java.util.HashMap;
+import java.util.Map;
+
 // I am using SQLite as the database
 public class DatabaseHelper extends SQLiteOpenHelper{
-
 
     private static final String DATABASE_NAME = "pantry.db";
     private static final int DATABASE_VERSION = 1;
@@ -42,6 +47,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     private static final String COL_RI_QTY = "quantity";
     private static final String COL_RI_UNIT = "unit";
 
+    //pantry table
     private static final String CREATE_TABLE_PANTRY =
             "CREATE TABLE " + TABLE_PANTRY + " (" +
                 COL_P_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -50,12 +56,14 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 COL_P_UNIT + " TEXT NOT NULL, " +
                 COL_P_EXPIRY + " TEXT)";
 
+    //recipe table
     private static final String CREATE_TABLE_RECIPES =
             "CREATE TABLE " + TABLE_RECIPES + " (" +
                     COL_R_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,  "+
                     COL_R_NAME + " TEXT NOT NULL,  "+
                     COL_R_STEPS + " TEXT NOT NULL);";
 
+    //recipe ingredients table
     private static final String CREATE_TABLE_RECIPE_INGREDIENTS =
             "CREATE TABLE " + TABLE_RECIPE_INGREDIENTS + " (" +
                     COL_RI_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -210,6 +218,61 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         c.close();
         return list;
     }
+
+
+
+    // the recipe matching functions, will only return the recipes that can be made with only
+    // the ingredients the user has
+
+    public List<Recipe> getRecipes(List<Ingred> ingreds) {
+        List<Recipe> allRecipes = getALlRecipes();
+        Map<String, Double> pantryTotals = buildPantryTotals(getAllPantryIngreds());
+
+        List<Recipe> suggested = new ArrayList<>();
+        for (Recipe recipe : allRecipes) {
+            if (canMakeRecipe(recipe, pantryTotals)) {
+                suggested.add(recipe);
+            }
+        }
+        return suggested;
+    }
+
+    private Map<String, Double> buildPantryTotals(List<Ingred> pantryIngreds) {
+        Map<String, Double> totals = new HashMap<>();
+        for (Ingred ingred : pantryIngreds) {
+            String key = pantryKey(ingred.getName(), ingred.getUnit());
+            String normalizedUnit = IngredNormalization.normalizeUnit(ingred.getUnit());
+            double base = IngredNormalization.toBaseQuantity(ingred.getQuantity(), normalizedUnit);
+            Double existing = totals.get(key);
+            totals.put(key, existing == null ? base : existing + base);
+        }
+        return totals;
+    }
+
+    private String pantryKey(String name, String unit) {
+        String normalizedName = IngredNormalization.normalizeWords(name);
+        String normalizedUnit = IngredNormalization.normalizeUnit(unit);
+        String category = IngredNormalization.unitCategory(normalizedUnit);
+        return normalizedName + "::" + category;
+    }
+
+    private boolean canMakeRecipe(Recipe recipe, Map<String, Double> pantryTotals) {
+        for (RecipeIngred req : recipe.getIngreds()) {
+            if (!hasEnough(req, pantryTotals)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean hasEnough(RecipeIngred req, Map<String, Double> pantryTotals) {
+        String key = pantryKey(req.getName(), req.getUnit());
+        String normalizedUnit = IngredNormalization.normalizeUnit(req.getUnit());
+        double requiredBase = IngredNormalization.toBaseQuantity(req.getQuantity(), normalizedUnit);
+        Double available = pantryTotals.get(key);
+        return available != null && available >= requiredBase;
+    }
+
 
     // adding/seeding recipes
 
