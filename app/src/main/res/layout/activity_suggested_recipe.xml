@@ -10,19 +10,19 @@
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/pantry_green"
-        android:title="@string/title_pantry"
+        android:title="@string/title_suggested"
         android:titleTextColor="@color/white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
-        android:id="@+id/textEmptyPantry"
+        android:id="@+id/textEmptySuggestions"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/empty_pantry"
-        android:textAlignment="center"
         android:padding="32dp"
+        android:text="@string/empty_suggestions"
+        android:textAlignment="center"
         android:textColor="@color/pantry_text_secondary"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
@@ -30,7 +30,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerPantry"
+        android:id="@+id/recyclerRecipes"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
@@ -38,17 +38,6 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAddIngredient"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:contentDescription="@string/add_ingredient"
-        android:src="@android:drawable/ic_input_add"
-        app:backgroundTint="@color/pantry_accent"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
