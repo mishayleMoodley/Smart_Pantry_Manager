@@ -27,8 +27,6 @@ final class NavHelper {
             destination = MainActivity.class;
         } else if (id == R.id.nav_recipes) {
             destination = SuggestedRecipesActivity.class;
-        } else if (id == R.id.nav_settings) {
-            destination = SettingsActivity.class;
         }
 
         if (destination != null) {

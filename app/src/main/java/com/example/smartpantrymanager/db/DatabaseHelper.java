@@ -168,7 +168,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
 
     // these functions will read the recipes from the database
-    public List<Recipe> getALlRecipes() {
+    public List<Recipe> getAllRecipes() {
         List<Recipe> recipes = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.query(TABLE_RECIPES, null, null, null, null, null, COL_R_NAME + " ASC");
@@ -224,8 +224,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     // the recipe matching functions, will only return the recipes that can be made with only
     // the ingredients the user has
 
-    public List<Recipe> getRecipes(List<Ingred> ingreds) {
-        List<Recipe> allRecipes = getALlRecipes();
+    public List<Recipe> getSuggestedRecipes() {
+        List<Recipe> allRecipes = getAllRecipes();
         Map<String, Double> pantryTotals = buildPantryTotals(getAllPantryIngreds());
 
         List<Recipe> suggested = new ArrayList<>();
@@ -241,7 +241,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         Map<String, Double> totals = new HashMap<>();
         for (Ingred ingred : pantryIngreds) {
             String key = pantryKey(ingred.getName(), ingred.getUnit());
-            String normalizedUnit = IngredNormalization.normalizeUnit(ingred.getUnit());
+            String normalizedUnit = normalizeUnit(ingred.getUnit());
             double base = IngredNormalization.toBaseQuantity(ingred.getQuantity(), normalizedUnit);
             Double existing = totals.get(key);
             totals.put(key, existing == null ? base : existing + base);
@@ -251,7 +251,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     private String pantryKey(String name, String unit) {
         String normalizedName = IngredNormalization.normalizeWords(name);
-        String normalizedUnit = IngredNormalization.normalizeUnit(unit);
+        String normalizedUnit = normalizeUnit(unit);
         String category = IngredNormalization.unitCategory(normalizedUnit);
         return normalizedName + "::" + category;
     }
@@ -267,7 +267,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     private boolean hasEnough(RecipeIngred req, Map<String, Double> pantryTotals) {
         String key = pantryKey(req.getName(), req.getUnit());
-        String normalizedUnit = IngredNormalization.normalizeUnit(req.getUnit());
+        String normalizedUnit = normalizeUnit(req.getUnit());
         double requiredBase = IngredNormalization.toBaseQuantity(req.getQuantity(), normalizedUnit);
         Double available = pantryTotals.get(key);
         return available != null && available >= requiredBase;

@@ -73,11 +73,10 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
 
         PantryViewHolder (@NotNull View ingredView) {
             super(ingredView);
-            textName = ingredView.findViewById(R.id.textIngredName);
-            textQty = ingredView.findViewById(R.id.textIngredQty);
-            textExpiry = ingredView.findViewById(R.id.textIngredExpiry);
-            buttonDelete = ingredView.findViewById(R.id.buttonDeleteIngred);
-
+            textName = ingredView.findViewById(R.id.textItemName);
+            textQty = ingredView.findViewById(R.id.textItemQuantity);
+            textExpiry = ingredView.findViewById(R.id.textItemExpiry);
+            buttonDelete = ingredView.findViewById(R.id.buttonDeleteItem);
         }
     }
 

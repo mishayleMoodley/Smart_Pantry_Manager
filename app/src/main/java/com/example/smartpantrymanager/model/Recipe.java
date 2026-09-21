@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 public class Recipe {
 
-    private long id;
-    private String name;
-    private String steps;
+    private final long id;
+    private final String name;
+    private final String steps;
     private List<RecipeIngred> ingreds = new ArrayList<>();
 
     public Recipe(long id, String name, String steps) {
