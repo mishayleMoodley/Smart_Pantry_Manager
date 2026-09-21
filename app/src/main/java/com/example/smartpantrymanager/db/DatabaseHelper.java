@@ -237,6 +237,31 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return suggested;
     }
 
+    // this will get the recipes that the user is missing an ingred for
+    public List<Recipe> getCloseRecipes() {
+        List<Recipe> allRecipes = getAllRecipes();
+        Map<String, Double> pantryTotals = buildPantryTotals(getAllPantryIngreds());
+
+        List<Recipe> closeRecipes = new ArrayList<>();
+        for (Recipe recipe : allRecipes) {
+            int missing = countMissingIngredients(recipe, pantryTotals);
+            if (missing == 1) {
+                closeRecipes.add(recipe);
+            }
+        }
+        return closeRecipes;
+    }
+
+    private int countMissingIngredients(Recipe recipe, Map<String, Double> pantryTotals) {
+        int missing = 0;
+        for (RecipeIngred req : recipe.getIngreds()) {
+            if (hasEnough(req, pantryTotals)) {
+                missing++;
+            }
+        }
+        return missing;
+    }
+
     private Map<String, Double> buildPantryTotals(List<Ingred> pantryIngreds) {
         Map<String, Double> totals = new HashMap<>();
         for (Ingred ingred : pantryIngreds) {
@@ -258,7 +283,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     private boolean canMakeRecipe(Recipe recipe, Map<String, Double> pantryTotals) {
         for (RecipeIngred req : recipe.getIngreds()) {
-            if (!hasEnough(req, pantryTotals)) {
+            if (hasEnough(req, pantryTotals)) {
                 return false;
             }
         }
@@ -270,7 +295,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         String normalizedUnit = normalizeUnit(req.getUnit());
         double requiredBase = IngredNormalization.toBaseQuantity(req.getQuantity(), normalizedUnit);
         Double available = pantryTotals.get(key);
-        return available != null && available >= requiredBase;
+        return available == null || !(available >= requiredBase);
     }
 
 

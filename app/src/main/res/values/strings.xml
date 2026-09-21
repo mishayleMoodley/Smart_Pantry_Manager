@@ -19,7 +19,7 @@
 
     <string name="title_suggested">Suggested Recipes</string>
     <string name="empty_suggestions">No recipes match your pantry yet - add more ingredients</string>
-    <string name="almost_there_header">Close enough (missing an ingredient)</string>
+    <string name="close_enough_header">Close enough (missing an ingredient)</string>
 
     <string name="title_recipe_detail">Recipe</string>
     <string name="label_ingredients_needed">Ingredients needed</string>
