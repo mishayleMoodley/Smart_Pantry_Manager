@@ -20,7 +20,9 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
 
     private DatabaseHelper dbHelper;
     private RecyclerView recyclerView;
+    private RecyclerView recyclerCloseRecipe;
     private TextView textEmpty;
+    private TextView textCloseRecipeHeader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +33,15 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         dbHelper = new DatabaseHelper(this);
+
         recyclerView = findViewById(R.id.recyclerRecipes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        recyclerCloseRecipe = findViewById(R.id.recyclerCloseRecipes);
+        recyclerCloseRecipe.setLayoutManager(new LinearLayoutManager(this));
+
         textEmpty = findViewById(R.id.textEmptySuggestions);
+        textCloseRecipeHeader = findViewById(R.id.textCloseRecipesHeader);
 
         NavHelper.setup(this, R.id.nav_recipes);
     }
@@ -42,6 +50,7 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadSuggestedRecipes();
+        loadCloseRecipes();
     }
 
     private void loadSuggestedRecipes() {
@@ -55,11 +64,25 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
             recyclerView.setVisibility(View.VISIBLE);
         }
 
-        RecipeAdapter adapter = new RecipeAdapter(suggested, recipe -> {
-            Intent intent = new Intent(SuggestedRecipesActivity.this, RecipeDetailActivity.class);
-            intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE_ID, recipe.getId());
-            startActivity(intent);
-        });
+        RecipeAdapter adapter = new RecipeAdapter(suggested, this::openRecipeDetail);
         recyclerView.setAdapter(adapter);
+    }
+
+    // this is the close recipes that are one ingredient away
+    private void loadCloseRecipes() {
+        List<Recipe> closeRecipes = dbHelper.getCloseRecipes();
+
+        boolean hasAny = !closeRecipes.isEmpty();
+        textCloseRecipeHeader.setVisibility(hasAny ? View.VISIBLE : View.GONE);
+        recyclerCloseRecipe.setVisibility(hasAny ? View.VISIBLE : View.GONE);
+
+        RecipeAdapter adapter = new RecipeAdapter(closeRecipes, this::openRecipeDetail);
+        recyclerCloseRecipe.setAdapter(adapter);
+    }
+
+    private void openRecipeDetail(Recipe recipe) {
+        Intent intent = new Intent(SuggestedRecipesActivity.this, RecipeDetailActivity.class);
+        intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE_ID, recipe.getId());
+        startActivity(intent);
     }
 }
