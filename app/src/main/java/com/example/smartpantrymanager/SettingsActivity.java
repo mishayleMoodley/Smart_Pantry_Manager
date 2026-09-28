@@ -20,6 +20,12 @@ public class SettingsActivity extends AppCompatActivity {
     private RadioGroup radioGroupUnits;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        NavHelper.select(this, R.id.nav_settings);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);

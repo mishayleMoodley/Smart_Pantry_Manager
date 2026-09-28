@@ -49,6 +49,7 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        NavHelper.select(this, R.id.nav_recipes);
         loadSuggestedRecipes();
         loadCloseRecipes();
     }

@@ -20,6 +20,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 // I am using SQLite as the database
+// there is 3 tables:
+// pantry_items: what the user has in their pantry
+// recipes: seeded recipes
+// recipe_ingredients: the requirements of the recipes
 public class DatabaseHelper extends SQLiteOpenHelper{
 
     private static final String DATABASE_NAME = "pantry.db";
@@ -98,20 +102,18 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     // PANTRY CRUD METHODS
 
-    public long insertPantryIngreds(Ingred ingred) {
+    public void insertPantryIngreds(Ingred ingred) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = pantryToValues(ingred);
         long id = db.insert(TABLE_PANTRY, null, values);
         db.close();
-        return id;
     }
-    public int updatePantryIngred(Ingred ingred) {
+    public void updatePantryIngred(Ingred ingred) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = pantryToValues(ingred);
         int rows = db.update(TABLE_PANTRY, values, COL_P_ID + " = ?",
                 new String[]{String.valueOf(ingred.getId())});
         db.close();
-        return rows;
     }
 
     public void deletePantryIngred(long id) {
@@ -311,8 +313,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 new Object[][]{
                         {"egg", 2, "pcs"},
                         {"salt", 1, "tsp"},
-                        {"butter", 1, "tsp"},
-                        {"bread", 2, "slices"}
+                        {"butter", 1, "tsp"}
                 });
         insertRecipe(db, "Homemade Peanut Butter",
                 "1. Heat oven to 200C\n" +

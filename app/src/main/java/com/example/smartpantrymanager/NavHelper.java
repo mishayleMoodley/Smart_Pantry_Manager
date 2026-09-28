@@ -8,6 +8,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 final class NavHelper {
     private NavHelper() {
     }
+    static void select(AppCompatActivity activity, int currentItemId) {
+        BottomNavigationView navigationView = activity.findViewById(R.id.bottomNavigation);
+        if (navigationView != null) {
+            navigationView.setSelectedItemId(currentItemId);
+        }
+    }
     static void setup(AppCompatActivity activity, int currentItemId) {
         BottomNavigationView navigationView = activity.findViewById(R.id.bottomNavigation);
         if (navigationView == null){
@@ -27,13 +33,14 @@ final class NavHelper {
             destination = MainActivity.class;
         } else if (id == R.id.nav_recipes) {
             destination = SuggestedRecipesActivity.class;
+        } else if (id == R.id.nav_settings) {
+            destination = SettingsActivity.class;
         }
 
         if (destination != null) {
             Intent intent = new Intent(activity, destination);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             activity.startActivity(intent);
-
         }
         return true;
     });

@@ -17,6 +17,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+// this recycler adapter will draw the pantry list on the main screen.
+// each row will shwo the ingredient name, quantity and unit.
 public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryViewHolder>{
 
     public interface OnItemActionListener {
@@ -30,6 +32,8 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
         this.ingreds = ingreds;
         this.listener = listener;
     }
+
+    //this is called by the recycler view when it needs a new row view
     
     @NonNull
     @Override
@@ -38,6 +42,7 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
         return new PantryViewHolder(view);
     }
 
+    //called by the recycler view when it needs to bind data to a row view
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull PantryViewHolder holder, int position) {
@@ -49,6 +54,7 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
         holder.textName.setText(ingred.getName());
         holder.textQty.setText(qtyText + " " + ingred.getUnit());
 
+        //hides expiry date if the user doesnt add one
         if (ingred.getExpiryDate() != null && !ingred.getExpiryDate().isEmpty()) {
             holder.textExpiry.setText(ingred.getExpiryDate());
             holder.textExpiry.setVisibility(View.VISIBLE);
@@ -60,11 +66,13 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
         holder.buttonDelete.setOnClickListener(v -> listener.onDeleteClick(ingred));
     }
 
+    //tells teh recycler view how many rows exist
     @Override
     public int getItemCount() {
         return ingreds.size();
     }
 
+    //this will hold a reference to the rows widgets
     static class PantryViewHolder extends RecyclerView.ViewHolder {
         private final TextView textName;
         private final TextView textQty;
