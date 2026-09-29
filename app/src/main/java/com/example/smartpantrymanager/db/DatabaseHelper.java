@@ -82,6 +82,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    //this will run once when the app is opened and recipes will be seeded
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_PANTRY);
@@ -90,6 +91,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         seedRecipes(db);
     }
 
+    //will recreate the database if the database version is updated
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PANTRY);
@@ -102,12 +104,15 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     // PANTRY CRUD METHODS
 
+
+    //adds bew row to pantry ingredients
     public void insertPantryIngreds(Ingred ingred) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = pantryToValues(ingred);
         long id = db.insert(TABLE_PANTRY, null, values);
         db.close();
     }
+    //updates a pantry row, using the id
     public void updatePantryIngred(Ingred ingred) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = pantryToValues(ingred);
@@ -116,12 +121,14 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         db.close();
     }
 
+    //removes a pantry ingredient
     public void deletePantryIngred(long id) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(TABLE_PANTRY, COL_P_ID + " =?", new String[]{String.valueOf(id)});
         db.close();
     }
 
+    //finds an ingredient in the pantry
     public Ingred getPantryIngred(long id) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.query(TABLE_PANTRY, null, COL_P_ID + "=?",
@@ -135,6 +142,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return ingred;
     }
 
+    //gets all the pantry ingredients in alphabetical order
     public List<Ingred> getAllPantryIngreds() {
         List<Ingred> ingred = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
@@ -150,6 +158,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return ingred;
     }
 
+    //converts an ingred object to a row of pantry_ingreds
     private ContentValues pantryToValues(Ingred ingred) {
         ContentValues values = new ContentValues();
         values.put(COL_P_NAME, ingred.getName());
@@ -159,6 +168,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return values;
     }
 
+    //converts row of pantry_ingreds cursor back to an object
     private Ingred cursorToIngred(Cursor c) {
         return new Ingred(
                 c.getLong(c.getColumnIndexOrThrow(COL_P_ID)),
@@ -170,6 +180,9 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
 
     // these functions will read the recipes from the database
+
+    //gets all the recipes in alphabetical order
+    //used to seed the database
     public List<Recipe> getAllRecipes() {
         List<Recipe> recipes = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
@@ -189,6 +202,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return recipes;
     }
 
+    //gets a recipe by its id
     public Recipe getRecipe(long recipeId) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.query(TABLE_RECIPES, null, COL_R_ID + "=?",
@@ -204,6 +218,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         db.close();
         return recipe;
     }
+
+    //gets the ingredients for a recipe
 
     private List<RecipeIngred> getRecipeIngreds(SQLiteDatabase db, long recipeId) {
         List<RecipeIngred> list = new ArrayList<>();
@@ -254,16 +270,18 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return closeRecipes;
     }
 
+    //will count how many ingredients a recipe is missing
     private int countMissingIngredients(Recipe recipe, Map<String, Double> pantryTotals) {
         int missing = 0;
         for (RecipeIngred req : recipe.getIngreds()) {
-            if (hasEnough(req, pantryTotals)) {
+            if (isMissing(req, pantryTotals)) {
                 missing++;
             }
         }
         return missing;
     }
 
+    //builds a map of the pantry ingredients
     private Map<String, Double> buildPantryTotals(List<Ingred> pantryIngreds) {
         Map<String, Double> totals = new HashMap<>();
         for (Ingred ingred : pantryIngreds) {
@@ -276,6 +294,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return totals;
     }
 
+    //builds a key for the pantry ingredients
     private String pantryKey(String name, String unit) {
         String normalizedName = IngredNormalization.normalizeWords(name);
         String normalizedUnit = normalizeUnit(unit);
@@ -283,21 +302,26 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return normalizedName + "::" + category;
     }
 
+    //checks if a recipe can be made with the ingredients the user already has
     private boolean canMakeRecipe(Recipe recipe, Map<String, Double> pantryTotals) {
         for (RecipeIngred req : recipe.getIngreds()) {
-            if (hasEnough(req, pantryTotals)) {
+            if (isMissing(req, pantryTotals)) {
                 return false;
             }
         }
         return true;
     }
 
-    private boolean hasEnough(RecipeIngred req, Map<String, Double> pantryTotals) {
+
+    private boolean isMissing(RecipeIngred req, Map<String, Double> pantryTotals) {
+        if (req == null || pantryTotals == null) {
+            return true;
+        }
         String key = pantryKey(req.getName(), req.getUnit());
         String normalizedUnit = normalizeUnit(req.getUnit());
         double requiredBase = IngredNormalization.toBaseQuantity(req.getQuantity(), normalizedUnit);
         Double available = pantryTotals.get(key);
-        return available == null || !(available >= requiredBase);
+        return available == null || available < requiredBase;
     }
 
 

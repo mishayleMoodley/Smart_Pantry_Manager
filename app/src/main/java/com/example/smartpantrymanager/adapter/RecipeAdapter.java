@@ -12,6 +12,8 @@ import com.example.smartpantrymanager.R;
 import com.example.smartpantrymanager.model.Recipe;
 
 import java.util.List;
+
+// this recycler adapter will show the recipe list on the suggested recipes screen
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>{
 
     public interface OnRecipeClickListener {
@@ -34,6 +36,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         return new RecipeViewHolder(view);
     }
 
+    //fills a row with the recipe name and ingredients count
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
         Recipe recipe = recipes.get(position);
