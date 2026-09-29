@@ -365,7 +365,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                         {"egg", 2, "pcs"},
                         {"flour", 100, "g"},
                         {"milk", 300, "ml"},
-                        {"oil", 1, "tbs"}
+                        {"oil", 2, "tsp"}
                 });
         insertRecipe(db, "Hash Browns",
                 "1. Cook the potatoes in a pan of boiling water for 10 mins then drain and" +
@@ -379,7 +379,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 new Object[][]{
                         {"potato", 3, "pcs"},
                         {"butter", 50, "g"},
-                        {"oil", 4, "tbs"},
+                        {"oil", 10, "tsp"},
                         {"salt", 1, "tsp"}
                 });
         insertRecipe(db, "Homemade Ice cream",
@@ -388,7 +388,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                         "2. Scrape it off the bowl and put in the freezer and cover with cling" +
                         " wrap and freeze until solid. \n",
                 new Object[][]{
-                        {"sweetened condensed milk", 200, "g"},
+                        {"condensed milk", 200, "g"},
                         {"cream", 600, "ml"},
                         {"vanilla extract", 1, "tsp"}
                 });
@@ -418,7 +418,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                         {"flour", 175, "g"},
                         {"egg", 3, "pcs"},
                         {"milk", 450, "ml"},
-                        {"oil", 1, "tbs"},
+                        {"oil", 4, "tsp"},
                         {"cream", 150, "ml"}
                 });
         insertRecipe(db, "Shortbread",
@@ -433,7 +433,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 new Object[][]{
                         {"flour", 150, "g"},
                         {"butter", 100, "g"},
-                        {"caster sugar", 50, "g"}
+                        {"sugar", 50, "g"}
                 });
         insertRecipe(db, "Peanut Butter Cookies",
                 "1. Heat oven to 180C, and line 2 large baking trays with baking paper. " +
@@ -446,7 +446,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                         "mins and transfer to a wire rack and cool. ",
                 new Object[][]{
                         {"peanut butter", 200, "g"},
-                        {"caster sugar", 175, "g"},
+                        {"sugar", 175, "g"},
                         {"salt", 1, "tsp"},
                         {"egg", 1, "pcs"}
                 });
@@ -459,8 +459,99 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                         "3. Remove any excess flour if needed. ",
                 new Object[][]{
                         {"self raising flour", 225, "g"},
-                        {"oil", 1, "tbsp"}
+                        {"oil", 1, "tsp"}
                 });
+        insertRecipe(db, "Basil Pesto",
+                "1. Wash and remove stems from the basil leaves. \n" +
+                        "2. Combine basil, salt and oil in a blender. \n" +
+                        "3. Pulse the blender until the basil is finely chopped. \n" +
+                        "4. either freeze it in an airtight container, or store in a jar and keep " +
+                        " it in the fridge",
+                new Object[][]{
+                        {"basil", 60, "g"},
+                        {"oil", 11, "tsp"},
+                        {"salt", 1, "tsp"}
+                });
+        insertRecipe(db, "Scones",
+                "1. Freeze butter for 15 minutes if not frozen already. Grate the butter in " +
+                        " a bowl with the flour.  \n" +
+                        "2. Rub the butter into the flour with your finger until its like " +
+                        " breadcrumbs. Try to aerate the mixture \n" +
+                        "3. Pour the milk into the flour and combine with a spatula until it is" +
+                        " soft. Do not overmix. \n" +
+                        "4. Turn the dough into a lightly floured surface. Gather the dough gently" +
+                        " into a ball. \n" +
+                        "5. Pat the dough out and make it 2cm thick. Cut with a cookie cutter. " +
+                        " Gently form the dough back together and cut again until the dough is used" +
+                        " up.  \n" +
+                        "6. Place the cut dough onto a baking sheet with parchment paper. \n" +
+                        "7. Back for 12-15 mins until risen and golden brown in a oven on " +
+                        " 200C heat. ",
+                new Object[][]{
+                        {"self raising flour", 375, "g"},
+                        {"butter", 75, "g"},
+                        {"milk", 80, "ml"}
+                });
+        insertRecipe(db, "Flatbread (Roti)",
+                "1. Combine the self raising flour, yogurt and salt together. \n" +
+                        "2. Mix to form a soft dough. Cut or break into small pieces. \n" +
+                        "3. Dust a little flour on a board and roll out the dough into about " +
+                        " 3 cm thick. \n" +
+                        "4. Heat a non stick pan on low-medium heat and cook for 30 secs on each" +
+                        " side. \n" +
+                        "5. Keep the cooked roti covered with a kitchen towel.",
+                new Object[][]{
+                        {"self raising flour", 250, "g"},
+                        {"yogurt", 250, "ml"},
+                        {"salt", 1, "tsp"}
+                });
+        insertRecipe(db, "Banana Brownies",
+                "1. Preheat oven to 175C. Grease a square baking pan and line with with " +
+                        " parchment paper. \n" +
+                        "2. Mash the bananas in a large bowl with a fork until smooth. \n" +
+                        "3. Add the butter until well combined with the banana. \n" +
+                        "4. Sift the cacao powder to avoid lumps and mix until batter is smooth " +
+                        " and all ingredients are fully mixed. And add the vanilla extract. \n" +
+                        "5. Pour the batter into the baking pan and spread it evenly." +
+                        "6. Bake in the oven for around 20-25 mins. Poke with a toothpick in the " +
+                        " center and check if it comes out clean with moist crumbs. \n" +
+                        "7. Allow to cool for 10 mins and cut into squares. ",
+                new Object[][]{
+                        {"banana", 3, "pcs"},
+                        {"butter", 125, "g"},
+                        {"cacao", 200, "g"},
+                        {"vanilla extract", 1, "tsp"}
+                });
+        insertRecipe(db, "Strawberry Mousse",
+                "1. Wash the strawberries and add to a food processor and blend until its " +
+                        " a smooth puree.\n" +
+                        "2. In a small pan, over medium heat, combine the strawberry puree and " +
+                        " sugar and simmer for 5-7 mins, stirring occasionally. Let it cool after \n" +
+                        "3. In a large bowl, whip the cream and vanilla extract until  the stiff " +
+                        " peaks form. Dont overheat. \n" +
+                        "4. Gently fold teh strawberry mixture into the whipped cream in small " +
+                        "batches until combined well. \n" +
+                        "5. Divide the mousse evenly into bowls. Refrigerate for 3-4 hours until set. ",
+                new Object[][]{
+                        {"strawberries", 15, "pcs"},
+                        {"sugar", 100, "g"},
+                        {"cream", 240, "ml"},
+                        {"vanilla extract", 1,"tsp"}
+                });
+        insertRecipe(db, "Chocolate Fudge",
+                "1. Line a square baking pan with parchment paper and grease with butter. \n" +
+                        "2. Chop the chocolate, place in a medium pan, add the condensed milk " +
+                        " and butter. \n" +
+                        "3. Place the pan over low heat, and cook, and stir until completely " +
+                        " melted and mixed, then cook for 2-3mins until thickens a bit more. \n" +
+                        "4. Pour the mixture into the pan and spread evenly. \n" +
+                        "5. Refrigerate for at least 3-4 hours. Release from the pan and cut into squares. ",
+                new Object[][]{
+                        {"chocolate", 300, "g"},
+                        {"condensed milk", 400, "g"},
+                        {"butter", 30, "g"}
+                });
+
 
     }
 
