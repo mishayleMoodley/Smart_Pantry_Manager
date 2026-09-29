@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 // this recycler adapter will draw the pantry list on the main screen.
-// each row will shwo the ingredient name, quantity and unit.
+// each row will show the ingredient name, quantity and unit.
 public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryViewHolder>{
 
     public interface OnItemActionListener {

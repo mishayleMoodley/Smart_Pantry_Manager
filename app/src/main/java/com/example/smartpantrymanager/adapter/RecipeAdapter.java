@@ -50,6 +50,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         return recipes.size();
     }
 
+    //this holds a reference to the rows textViews
     static class RecipeViewHolder extends RecyclerView.ViewHolder {
         TextView textName;
         TextView textSubtitle;

@@ -313,6 +313,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     }
 
 
+    //checks if there are ingredients missing
     private boolean isMissing(RecipeIngred req, Map<String, Double> pantryTotals) {
         if (req == null || pantryTotals == null) {
             return true;
@@ -323,7 +324,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         Double available = pantryTotals.get(key);
         return available == null || available < requiredBase;
     }
-
 
     // adding/seeding recipes
 
@@ -463,6 +463,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 });
 
     }
+
+    //inserts a recipe and its ingredient list in one call.
 
     private void insertRecipe(SQLiteDatabase db, String name, String steps, Object[][] ingreds) {
         ContentValues recipeValues = new ContentValues();
