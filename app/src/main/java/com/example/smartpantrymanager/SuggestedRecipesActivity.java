@@ -16,6 +16,9 @@ import com.example.smartpantrymanager.model.Recipe;
 
 import java.util.List;
 
+//this will show both the suggested recipes and the close recipes which require a missing ingredient
+//both of these lists will get reloaded using onResume so its always up to date
+
 public class SuggestedRecipesActivity extends AppCompatActivity {
 
     private DatabaseHelper dbHelper;
@@ -54,6 +57,8 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
         loadCloseRecipes();
     }
 
+    //shows only the recipes the user can make from their pantry
+    //otherwise will show a message saying there are no recipes
     private void loadSuggestedRecipes() {
         List<Recipe> suggested = dbHelper.getSuggestedRecipes();
 
@@ -69,7 +74,8 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    // this is the close recipes that are one ingredient away
+    //this is the close recipes that are one ingredient away
+    //the header will only show up if there are any recipes that are close
     private void loadCloseRecipes() {
         List<Recipe> closeRecipes = dbHelper.getCloseRecipes();
 
@@ -81,6 +87,7 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
         recyclerCloseRecipe.setAdapter(adapter);
     }
 
+    //this will open the recipe details for both lists
     private void openRecipeDetail(Recipe recipe) {
         Intent intent = new Intent(SuggestedRecipesActivity.this, RecipeDetailActivity.class);
         intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE_ID, recipe.getId());

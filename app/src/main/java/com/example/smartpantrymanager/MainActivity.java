@@ -18,6 +18,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
+//this is the launcher screen and will display the users ingredients if they have any
+
 public class MainActivity extends AppCompatActivity {
 
     private DatabaseHelper dbHelper;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         textEmpty = findViewById(R.id.textEmptyPantry);
 
+        //fab will open the AddEditIngredActivity
         FloatingActionButton fab = findViewById(R.id.fabAddIngredient);
         fab.setOnClickListener(v -> startActivity(
                 new Intent(MainActivity.this, AddEditIngredActivity.class)));
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         NavHelper.setup(this, R.id.nav_pantry);
     }
 
+    // the list will always update when the app is opened
     @Override
     protected void onResume() {
         super.onResume();
@@ -51,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         loadPantryItems();
     }
 
+    //this will load all the ingredients from the db and will say if its empty
     private void loadPantryItems() {
         List<Ingred> ingred = dbHelper.getAllPantryIngreds();
 
@@ -63,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         PantryAdapter adapter = new PantryAdapter(ingred, new PantryAdapter.OnItemActionListener() {
+            //when the user clicks on an ingredient it will open the AddEditIngredActivity
             @Override
             public void onItemClick(Ingred ingred) {
                 Intent intent = new Intent(MainActivity.this, AddEditIngredActivity.class);
@@ -78,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
+    //this will confirm if the user wants to actually delete the ingredient
     private void confirmDelete(Ingred item) {
         new AlertDialog.Builder(this)
                 .setTitle(item.getName())

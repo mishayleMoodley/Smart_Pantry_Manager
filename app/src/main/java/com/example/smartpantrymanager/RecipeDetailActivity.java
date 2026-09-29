@@ -10,6 +10,8 @@ import com.example.smartpantrymanager.db.DatabaseHelper;
 import com.example.smartpantrymanager.model.Recipe;
 import com.example.smartpantrymanager.model.RecipeIngred;
 
+//this shows the recipes details, like teh name and ingredients list and steps
+
 public class RecipeDetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_RECIPE_ID = "extra_recipe_id";
@@ -21,6 +23,8 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //used back arrow of toolbar which closes the current screen and back to where it was
+        //opened from
         toolbar.setNavigationOnClickListener(v -> finish());
 
         long recipeId = getIntent().getLongExtra(EXTRA_RECIPE_ID, -1);
@@ -40,6 +44,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
         textName.setText(recipe.getName());
 
+        //builds a list of the ingredients needed with bullet points
         StringBuilder ingredientsText = new StringBuilder();
         for (RecipeIngred ingredient : recipe.getIngreds()) {
             ingredientsText.append("• ").append(ingredient.toDisplayString()).append("\n");

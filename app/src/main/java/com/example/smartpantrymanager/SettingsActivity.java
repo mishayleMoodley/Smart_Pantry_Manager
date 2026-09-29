@@ -9,6 +9,10 @@ import android.widget.Switch;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+//the settings page which switches off teh expiry alerts and changes the unit system to
+//metric or imperial
+//uses SharedPreferences so it persists
+
 @SuppressLint("UseSwitchCompatOrMaterialCode")
 public class SettingsActivity extends AppCompatActivity {
 
@@ -36,7 +40,11 @@ public class SettingsActivity extends AppCompatActivity {
         switchExpiryAlerts = findViewById(R.id.switchExpiryAlerts);
         radioGroupUnits = findViewById(R.id.radioGroupUnits);
 
+        //sets each widget to whatever was last saved before attaching listeners
+
         loadPreferences();
+
+        //all changes will be saved to SharedPreferences directly
 
         switchExpiryAlerts.setOnCheckedChangeListener((buttonView, isChecked) ->
                 getPreferences().edit().putBoolean(KEY_EXPIRY_ALERTS, isChecked).apply());
@@ -49,6 +57,7 @@ public class SettingsActivity extends AppCompatActivity {
         NavHelper.setup(this, R.id.nav_settings);
     }
 
+    //loads the last saved preferences
     private void loadPreferences() {
         SharedPreferences prefs = getPreferences();
         boolean alertsEnabled = prefs.getBoolean(KEY_EXPIRY_ALERTS, true);

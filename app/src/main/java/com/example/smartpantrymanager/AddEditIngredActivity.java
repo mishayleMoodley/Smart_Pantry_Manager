@@ -17,7 +17,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Calendar;
 import java.util.Locale;
-
+//this will add or edit an ingredient for a single ingredient
 public class AddEditIngredActivity extends AppCompatActivity {
 
     public static final String EXTRA_INGREDIENT_ID = "extra_ingredient_id";
@@ -27,6 +27,8 @@ public class AddEditIngredActivity extends AppCompatActivity {
     };
 
     private DatabaseHelper dbHelper;
+
+    //this will either be a new ingredient or one from the db
     private Ingred currentIngredient;
 
     private TextInputLayout layoutName;
@@ -57,8 +59,10 @@ public class AddEditIngredActivity extends AppCompatActivity {
                 this, android.R.layout.simple_spinner_dropdown_item, UNITS);
         spinnerUnit.setAdapter(unitAdapter);
 
+        //will show the date picker when the user clicks on the expiry date
         editExpiry.setOnClickListener(v -> showDatePicker());
 
+        //-1 means that it is a new id since no id would have been passed
         long ingredientId = getIntent().getLongExtra(EXTRA_INGREDIENT_ID, -1);
         if (ingredientId != -1) {
             currentIngredient = dbHelper.getPantryIngred(ingredientId);
@@ -76,11 +80,13 @@ public class AddEditIngredActivity extends AppCompatActivity {
         findViewById(R.id.buttonSaveIngredient).setOnClickListener(v -> saveIngredient());
         findViewById(R.id.buttonDeleteIngredient).setOnClickListener(v -> deleteIngredient());
 
+        // will show the delete button if the ingredient is not new
         if (!currentIngredient.isNew()) {
             findViewById(R.id.buttonDeleteIngredient).setVisibility(android.view.View.VISIBLE);
         }
     }
 
+    //when a user click an ingredient to edit, it will fill all the editable fields in teh textbox
     private void populateForEdit() {
         editName.setText(currentIngredient.getName());
         editQuantity.setText(formatQuantity(currentIngredient.getQuantity()));
@@ -92,6 +98,9 @@ public class AddEditIngredActivity extends AppCompatActivity {
         }
     }
 
+    //this opens the date picker when the user clicks on the expiry date
+    //auto sets to the current date
+    //formatted to yyyy-mm-dd
     private void showDatePicker() {
         Calendar calendar = Calendar.getInstance();
         new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
@@ -102,6 +111,8 @@ public class AddEditIngredActivity extends AppCompatActivity {
                 calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
+    //this will check the form before its saved, for example: name is required, and quantity needs
+    // to be greater than 0. if there is any errors in the data the field will show where the error is
     private boolean isFormValid(String name, String quantityText) {
         boolean valid = true;
 
@@ -116,6 +127,7 @@ public class AddEditIngredActivity extends AppCompatActivity {
         try {
             quantity = Double.parseDouble(quantityText);
         } catch (NumberFormatException e) {
+            //anything that can't be parsed is invalid (eg Letters)
             quantity = -1;
         }
 
@@ -129,6 +141,7 @@ public class AddEditIngredActivity extends AppCompatActivity {
         return valid;
     }
 
+    // reads all the fields and inserts if new ingredient or will update
     private void saveIngredient() {
         String name = editName.getText() == null ? "" : editName.getText().toString().trim();
         String quantityText = editQuantity.getText() == null ? "" : editQuantity.getText().toString().trim();
@@ -154,6 +167,7 @@ public class AddEditIngredActivity extends AppCompatActivity {
         finish();
     }
 
+    //will only delete if it exists in the database
     private void deleteIngredient() {
         if (!currentIngredient.isNew()) {
             dbHelper.deletePantryIngred(currentIngredient.getId());
@@ -162,12 +176,14 @@ public class AddEditIngredActivity extends AppCompatActivity {
         finish();
     }
 
+    //if its a whole number it wont display a .0
     private String formatQuantity(double quantity) {
         return quantity == Math.floor(quantity)
                 ? String.valueOf((int) quantity)
                 : String.valueOf(quantity);
     }
 
+    //finds the position in the units array
     private int indexOf(String value) {
         if (value == null) return -1;
         for (int i = 0; i < AddEditIngredActivity.UNITS.length; i++) {
