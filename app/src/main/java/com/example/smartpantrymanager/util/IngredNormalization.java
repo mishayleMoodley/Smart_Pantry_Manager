@@ -1,71 +1,77 @@
 package com.example.smartpantrymanager.util;
 
-import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
-public final class IngredNormalization {
-    // used to normalize units (example grams to g)
-    // and changing from plural to singular (example tomatoes to tomato)
 
+public final class IngredNormalization {
+    //used to normalize units (example grams to g)
+    //and changing from plural to singular (example tomatoes to tomato)
     private IngredNormalization() {
 
     }
 
-    // this will normalize the units and the different ways people may type units
-    private static final Map<String, String> Unit_Synonyms = new HashMap<>();
+    //this will normalize the units and the different ways people may type units
+    private static final Map<String, String> UNIT_SYNONYMS;
     static {
-        Unit_Synonyms.put("gram", "g");
-        Unit_Synonyms.put("grams", "g");
-        Unit_Synonyms.put("g", "g");
-        Unit_Synonyms.put("kg", "kg");
-        Unit_Synonyms.put("kilogram", "kg");
-        Unit_Synonyms.put("kilograms", "kg");
-        Unit_Synonyms.put("kilos", "kg");
-        Unit_Synonyms.put("kilo", "kg");
-        Unit_Synonyms.put("ml", "ml");
-        Unit_Synonyms.put("milliliter", "ml");
-        Unit_Synonyms.put("milliliters", "ml");
-        Unit_Synonyms.put("millilitre", "ml");
-        Unit_Synonyms.put("millilitres", "ml");
-        Unit_Synonyms.put("l", "l");
-        Unit_Synonyms.put("liter", "l");
-        Unit_Synonyms.put("liters", "l");
-        Unit_Synonyms.put("litre", "l");
-        Unit_Synonyms.put("tsp", "tsp");
-        Unit_Synonyms.put("teaspoon", "tsp");
-        Unit_Synonyms.put("teaspoons", "tsp");
-        Unit_Synonyms.put("tbs", "tbs");
-        Unit_Synonyms.put("tablespoon", "tbs");
-        Unit_Synonyms.put("tablespoons", "tbs");
-        Unit_Synonyms.put("tbsp", "tbs");
-        Unit_Synonyms.put("cup", "cup");
-        Unit_Synonyms.put("cups", "cup");
-        Unit_Synonyms.put("slice", "slice");
-        Unit_Synonyms.put("slices", "slice");
-        Unit_Synonyms.put("piece", "pcs");
-        Unit_Synonyms.put("pieces", "pcs");
-        Unit_Synonyms.put("pcs", "pcs");
-        Unit_Synonyms.put("pc", "pcs");
-        Unit_Synonyms.put("", "pcs");
-    }
+        UNIT_SYNONYMS = Map.ofEntries(
+                Map.entry("gram", "g"),
+                Map.entry("grams", "g"),
+                Map.entry("g", "g"),
 
+                Map.entry("kg", "kg"),
+                Map.entry("kilogram", "kg"),
+                Map.entry("kilograms", "kg"),
+                Map.entry("kilos", "kg"),
+                Map.entry("kilo", "kg"),
+
+                Map.entry("ml", "ml"),
+                Map.entry("milliliter", "ml"),
+                Map.entry("milliliters", "ml"),
+                Map.entry("millilitre", "ml"),
+                Map.entry("millilitres", "ml"),
+
+                Map.entry("l", "l"),
+                Map.entry("liter", "l"),
+                Map.entry("liters", "l"),
+                Map.entry("litre", "l"),
+
+                Map.entry("tsp", "tsp"),
+                Map.entry("teaspoon", "tsp"),
+                Map.entry("teaspoons", "tsp"),
+
+                Map.entry("tbs", "tbs"),
+                Map.entry("tablespoon", "tbs"),
+                Map.entry("tablespoons", "tbs"),
+                Map.entry("tbsp", "tbs"),
+
+                Map.entry("cup", "cup"),
+                Map.entry("cups", "cup"),
+
+                Map.entry("slice", "slice"),
+                Map.entry("slices", "slice"),
+
+                Map.entry("piece", "pcs"),
+                Map.entry("pieces", "pcs"),
+                Map.entry("pcs", "pcs"),
+                Map.entry("pc", "pcs"),
+                Map.entry("", "pcs")
+        );
+    }
 
     //will normalize plural words and make them singular
     //e.g. will turn tomatoes to tomato
     public static String normalizeWords(String normWords) {
         if (normWords == null) return "";
-        String word = normWords.trim().toLowerCase().replaceAll("\\s+", " ");
+        String word = normWords.trim().toLowerCase(Locale.ROOT).replaceAll("\\s+", " ");
         if (word.endsWith("oes") || word.endsWith("shes") || word.endsWith("ches") || word.endsWith("xes") || word.endsWith("sses")) {
-
             //tomatoes to tomato, dishes to dish for example
             word = word.substring(0, word.length() - 2);
-
         } else if (word.endsWith("ies") && word.length() > 4) {
             //berries to berry
             word = word.substring(0, word.length() - 3) + "y";
-
         } else if (word.endsWith("s") && !word.endsWith("ss") && word.length() > 3) {
             //eggs to egg
-            word = word.substring(0, word.length() -1);
+            word = word.substring(0, word.length() - 1);
         }
         return word;
     }
@@ -73,31 +79,51 @@ public final class IngredNormalization {
     //this will map all the different spelling of units and make it equal to the same shortest form
     //of the unit, for example, kilogram/kilos/kilo will all mean kg
     public static String normalizeUnit(String normUnit) {
-        if (normUnit == null) return "pcs";
-        String unit = normUnit.trim().toLowerCase();
-        String norm = Unit_Synonyms.get(unit);
+        if (normUnit == null || normUnit.trim().isEmpty()) return "pcs";
+        String unit = normUnit.trim().toLowerCase(Locale.ROOT);
+        String norm = UNIT_SYNONYMS.get(unit);
         return norm != null ? norm : unit;
     }
 
+    //this will group units into the same type of category
+    //example kg and g will be grouped together
     public static String unitCategory(String normUnit) {
-        switch (normUnit) {
+        String unit = normalizeUnit(normUnit);
+        switch (unit) {
             case "g":
             case "kg":
-                return "mass";
             case "ml":
             case "l":
-                return "volume";
+            case "tsp":
+            case "tbs":
+            case "cup":
+                return "measure";
+            case "pcs":
+            case "pc":
+            case "piece":
+            case "pieces":
+            case "slice":
+            case "slices":
             default:
-                return "count:" + normUnit;
+                return "count";
         }
     }
 
-    //
+    //will convert a quantity to its smallest base unit in its category
     public static double toBaseQuantity(double quantity, String normUnit) {
-        switch (normUnit) {
+        if (normUnit == null) return quantity;
+
+        switch (normalizeUnit(normUnit)) {
             case "kg":
+                return quantity * 1000.0; //kg to g base
             case "l":
-                return quantity * 1000;
+                return quantity * 1000.0; //l to ml base
+            case "cup":
+                return quantity * 240.0;  //cup to ml base
+            case "tbs":
+                return quantity * 15.0;   //tbsp to ml base
+            case "tsp":
+                return quantity * 5.0;    //tsp to ml base
             default:
                 return quantity;
         }
