@@ -1,5 +1,7 @@
 package com.example.smartpantrymanager.model;
 
+//this handles one ingredient requirement which belongs to a recipe, like 1 egg or 200ml milk
+//and will check the users pantry if they have it
 public class RecipeIngred {
 
     private final String name;

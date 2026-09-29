@@ -56,17 +56,22 @@ public final class IngredNormalization {
         String word = normWords.trim().toLowerCase().replaceAll("\\s+", " ");
         if (word.endsWith("oes") || word.endsWith("shes") || word.endsWith("ches") || word.endsWith("xes") || word.endsWith("sses")) {
 
+            //tomatoes to tomato, dishes to dish for example
             word = word.substring(0, word.length() - 2);
 
         } else if (word.endsWith("ies") && word.length() > 4) {
+            //berries to berry
             word = word.substring(0, word.length() - 3) + "y";
 
         } else if (word.endsWith("s") && !word.endsWith("ss") && word.length() > 3) {
+            //eggs to egg
             word = word.substring(0, word.length() -1);
         }
         return word;
     }
 
+    //this will map all the different spelling of units and make it equal to the same shortest form
+    //of the unit, for example, kilogram/kilos/kilo will all mean kg
     public static String normalizeUnit(String normUnit) {
         if (normUnit == null) return "pcs";
         String unit = normUnit.trim().toLowerCase();
@@ -87,6 +92,7 @@ public final class IngredNormalization {
         }
     }
 
+    //
     public static double toBaseQuantity(double quantity, String normUnit) {
         switch (normUnit) {
             case "kg":

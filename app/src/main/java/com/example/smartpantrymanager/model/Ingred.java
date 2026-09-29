@@ -1,17 +1,21 @@
 package com.example.smartpantrymanager.model;
 
+//this stores information about a single ingredient in the users pantry
+//like how many items, units, and expiry date
 public class Ingred {
 
     private long id = -1;
     private String name;
     private double quantity;
     private String unit;
-    private String expiryDate;
+    private String expiryDate; // optional for the user
 
+    //empty constructor is used when creating a new ingredient
     public Ingred() {
 
     }
 
+    //this is a full constructor when reading an existing ingredients data
     public Ingred(long id, String name, double quantity, String unit, String expiryDate){
         this.id = id;
         this.name = name;
@@ -59,6 +63,9 @@ public class Ingred {
     public void setExpiryDate(String expiryDate) {
         this.expiryDate = expiryDate;
     }
+
+    //used by AddEditIngredActivity to check if the ingredient is new or not
+    //so can either update or create a new one
 
     public boolean isNew() {
         return id == -1;
