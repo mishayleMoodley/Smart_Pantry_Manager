@@ -28,8 +28,10 @@ public class RecipeDetailActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> finish());
 
         long recipeId = getIntent().getLongExtra(EXTRA_RECIPE_ID, -1);
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
-        Recipe recipe = dbHelper.getRecipe(recipeId);
+        Recipe recipe;
+        try (DatabaseHelper dbHelper = new DatabaseHelper(this)) {
+            recipe = dbHelper.getRecipe(recipeId);
+        }
 
         if (recipe == null) {
             finish();
